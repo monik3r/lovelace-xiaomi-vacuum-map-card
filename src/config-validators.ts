@@ -287,6 +287,7 @@ export function isOldConfig(config: XiaomiVacuumMapCardConfig): boolean {
 }
 
 export function areAllEntitiesDefined(usedEntities: string[], hass: HomeAssistantFixed): string[] {
+    if (!hass) return [];
     const availableEntities = Object.keys(hass.states);
     return usedEntities.filter(e => !availableEntities.includes(e));
 }
