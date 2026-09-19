@@ -151,6 +151,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
     public isInEditor = false;
+    private _visibilityObserver?: IntersectionObserver;
 
     constructor() {
         super();
@@ -241,6 +242,14 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.connected = true;
         this._updateElements();
         delay(100).then(() => this.requestUpdate());
+
+        this._visibilityObserver = new IntersectionObserver((entries) => {
+            if (entries.some(e => e.isIntersecting)) {
+                this._updateElements();
+                this.requestUpdate();
+            }
+        }, { threshold: 0.01 });
+        this._visibilityObserver.observe(this);
     }
 
     disconnectedCallback(): void {
@@ -252,6 +261,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         this.connected = false;
+        this._visibilityObserver?.disconnect();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
