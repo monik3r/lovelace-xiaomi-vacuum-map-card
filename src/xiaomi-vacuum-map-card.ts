@@ -262,6 +262,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     protected render(): TemplateResult | void {
+        if (!this.hass) return;
         if (this.oldConfig) {
             return this._showOldConfig();
         }
